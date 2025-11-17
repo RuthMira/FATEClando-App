@@ -5,25 +5,20 @@ criptografar.py
 Criptografa uma mensagem de texto usando a chave pública RSA.
 """
 
-from rsa_utils import load_public_key, rsa_encrypt
-import base64
+import rsa
 
 
-def criptografar_mensagem(mensagem: str, public_key_path: str = "chave_publica.pem"):
-    chave_publica = load_public_key(public_key_path)
-    mensagem_bytes = mensagem.encode("utf-8")
-    mensagem_cifrada = rsa_encrypt(chave_publica, mensagem_bytes)
+def cifrar(msg):
+    """Carrega a chave pública do colega e cifra a mensagem."""
+    with open(
+        r"C:\Users\ruth_\OneDrive\Área de Trabalho\FATEClando-App\chave_publica_colega.pem", "rb"
+    ) as arq:
+        txt = arq.read()
 
-    with open("mensagem_cifrada.txt", "wb") as f:
-        f.write(mensagem_cifrada)
+    pub = rsa.PublicKey.load_pkcs1(txt, format="PEM")
 
-    print("Mensagem criptografada com sucesso!")
-    print("  - Arquivo gerado: mensagem_cifrada.txt")
-    print("  - Visualização base64:")
-    print(base64.b64encode(mensagem_cifrada).decode())
+    if isinstance(msg, str):
+        msg = msg.encode("utf-8")
 
-
-if __name__ == "__main__":
-    mensagem = input("Digite a mensagem para criptografar: ")
-    criptografar_mensagem(mensagem)
-
+    msgc = rsa.encrypt(msg, pub)
+    return msgc
