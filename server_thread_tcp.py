@@ -25,6 +25,7 @@ def receber(chave_privada):
             cifrada = base64.b64decode(msg, validate=True)
             decifrada = rsa.decrypt(cifrada, chave_privada).decode("utf-8")
             print("Cliente (decifrada):", decifrada)
+            tcp_con.sendall(b"Servidor: mensagem recebida e decifrada.")
         except Exception:
             print("Cliente (bruta):", msg)
 
